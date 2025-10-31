@@ -22,14 +22,21 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Start web server
-        run: npx http-server . -p 5500 &
-
-      - name: Wait for server (install + chmod fix)
+      - name: Install http-server and wait-on
         run: |
-          npm install wait-on
-          chmod +x ./node_modules/.bin/wait-on
-          ./node_modules/.bin/wait-on http://127.0.0.1:5500 --timeout 60000
+          npm install -g http-server wait-on
+
+      - name: Start web server
+        run: http-server . -p 5500 &
+
+      - name: Debug files
+        run: ls -R .
+
+      - name: Test server response
+        run: curl -I http://127.0.0.1:5500 || true
+
+      - name: Wait for server
+        run: wait-on http://127.0.0.1:5500 --timeout 60000
 
       - name: Run Cypress
         uses: cypress-io/github-action@v6
