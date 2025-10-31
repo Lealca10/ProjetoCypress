@@ -12,29 +12,35 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "20"
 
       - name: Install dependencies
         run: npm install
 
-      - name: Start application
-        run: npm start &
-
+      # ⚠️ Se você usa Live Server localmente, substituímos aqui por http-server
+      - name: Start web server
+        run: npx http-server . -p 5500 &
+        
+      # ✅ Espera o servidor ficar online
       - name: Wait for server
         run: npx wait-on http://127.0.0.1:5500 --timeout 60000
 
       - name: Run Cypress
-        uses: cypress-io/github-action@v5
+        uses: cypress-io/github-action@v6
         with:
           browser: chrome
           headless: true
-          args: --disable-gpu
+          build: npm run build --if-present
+          start: npm start
+          wait-on: http://127.0.0.1:5500
+          install: false
 
+      # ✅ v4 da action correta
       - name: Upload Cypress artifacts
         if: failure()
         uses: actions/upload-artifact@v4
