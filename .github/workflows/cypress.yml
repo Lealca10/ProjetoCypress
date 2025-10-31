@@ -17,30 +17,27 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install dependencies
         run: npm install
 
-      # Subir servidor HTTP
       - name: Start application
         run: npm start &
 
-      - name: Wait for app to be ready
+      - name: Wait for server
         run: npx wait-on http://127.0.0.1:5500
 
-      # Rodar Cypress headless, desabilitando GPU
-      - name: Run Cypress tests
+      - name: Run Cypress
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
           headless: true
           args: --disable-gpu
 
-      # Upload artifacts caso falhem testes
-      - name: Upload Cypress Artifacts
-        uses: actions/upload-artifact@v4
+      - name: Upload Cypress artifacts
         if: failure()
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-results
           path: |
