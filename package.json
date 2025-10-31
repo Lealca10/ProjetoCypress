@@ -1,9 +1,10 @@
 {
   "devDependencies": {
-    "cypress": "^14.5.4"
+    "cypress": "^14.5.4",
+    "http-server": "^14.1.1"
   },
   "scripts": {
-  "test": "cypress run",
-  "start": "node server.js"
+  "start": "http-server ./ -p 5500",
+  "test": "cypress run"
 }
 }
