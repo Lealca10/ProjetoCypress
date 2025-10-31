@@ -2,9 +2,9 @@ name: Cypress Tests
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "dev" ]
 
 jobs:
   cypress-run:
@@ -21,21 +21,20 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-        
+
       # Se sua app precisa rodar para o Cypress testar
       - name: Start application
         run: npm start &
-        
+
       - name: Wait for app to be ready
         run: npx wait-on http://localhost:3000
-        
+
       - name: Run Cypress tests
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
           headless: true
 
-      # Upload artifacts (vídeos, screenshots)
       - name: Upload Cypress Artifacts
         uses: actions/upload-artifact@v3
         if: failure()
