@@ -22,14 +22,14 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Subir o servidor HTTP para arquivos estáticos
+      # Subir servidor HTTP
       - name: Start application
         run: npm start &
 
       - name: Wait for app to be ready
         run: npx wait-on http://127.0.0.1:5500
 
-      # Rodar Cypress em headless mode, desabilitando GPU
+      # Rodar Cypress headless, desabilitando GPU
       - name: Run Cypress tests
         uses: cypress-io/github-action@v5
         with:
