@@ -22,19 +22,22 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      # Se sua app precisa rodar para o Cypress testar
+      # Subir o servidor HTTP para arquivos estáticos
       - name: Start application
         run: npm start &
 
       - name: Wait for app to be ready
-        run: npx wait-on http://127.0.0.1:5500/index.html
+        run: npx wait-on http://127.0.0.1:5500
 
+      # Rodar Cypress em headless mode, desabilitando GPU
       - name: Run Cypress tests
         uses: cypress-io/github-action@v5
         with:
           browser: chrome
           headless: true
+          args: --disable-gpu
 
+      # Upload artifacts caso falhem testes
       - name: Upload Cypress Artifacts
         uses: actions/upload-artifact@v3
         if: failure()
