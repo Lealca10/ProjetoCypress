@@ -25,8 +25,11 @@ jobs:
       - name: Start web server
         run: npx http-server . -p 5500 &
 
-      - name: Wait for server
-        run: npx --yes wait-on http://127.0.0.1:5500 --timeout 60000
+      - name: Wait for server (install + chmod fix)
+        run: |
+          npm install wait-on
+          chmod +x ./node_modules/.bin/wait-on
+          ./node_modules/.bin/wait-on http://127.0.0.1:5500 --timeout 60000
 
       - name: Run Cypress
         uses: cypress-io/github-action@v6
